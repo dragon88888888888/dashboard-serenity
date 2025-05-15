@@ -106,6 +106,17 @@ interface EnhancedData extends RawData {
     geminiInsights: GeminiInsights;
 }
 
+interface MonthlyUser {
+    month: string;
+    name: string;
+    usuarios: number;
+}
+
+interface MonthlyTest {
+    month: string;
+    tests: number;
+}
+
 // Configurar la API de Gemini
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || '');
 
@@ -236,8 +247,8 @@ async function collectRawData(): Promise<RawData> {
     `);
 
     // Combinamos los datos de usuarios y tests por mes
-    const combinedMonthlyData: MonthlyData[] = monthlyUsers.map((month: { month: any; }) => {
-        const matchingTests = monthlyTests.find((test: { month: any; }) => test.month === month.month);
+    const combinedMonthlyData: MonthlyData[] = monthlyUsers.map((month: MonthlyUser) => {
+        const matchingTests = monthlyTests.find((test: MonthlyTest) => test.month === month.month);
         return {
             ...month,
             tests: matchingTests ? matchingTests.tests : 0
